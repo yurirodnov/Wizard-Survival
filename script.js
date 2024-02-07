@@ -12,6 +12,9 @@ window.addEventListener('load', function(){
     class InputHandler {
         constructor(){
             this.keys = [];
+            this.fireballTarget = [];
+            this.fireballTargetX = 0;
+            this.fireballTargetY = 0;
             window.addEventListener('keydown', e => {
                if ((    e.key === 's' ||
                         e.key === 'w' ||
@@ -31,47 +34,61 @@ window.addEventListener('load', function(){
                  }
                  console.log(e.key, this.keys);
             });
+            window.addEventListener('mousedown', e => {
+                if (e.target.id === "canvas") {
+                    this.fireballTarget[0] = e.clientX;
+                    this.fireballTarget[1] = e.clientY;
+
+                    console.log(this.fireballTarget);
+                    
+                }
+                
+
+            });
         }
 
     }
 
     class Mage {
         constructor(){            
-            this.image = document.getElementById('mage');
-            this.xPosition = 0;
-            this.yPosition = 0;
+            this.mage = document.getElementById('mage');
+            
+            this.xPosition = 500;
+            this.yPosition = 350;
             this.width = 70;
             this.height = 70;
             this.speed = 3;
         }
         draw(context){
-            context.drawImage(this.image, this.xPosition, this.yPosition, this.width, this.height);
+            context.drawImage(this.mage, this.xPosition, this.yPosition, this.width, this.height);
         }
         move(input){
             if (input.keys.includes('w')) {                
-                this.yPosition--;
+                this.yPosition -= this.speed;
             } else if (input.keys.includes('a')) {
-                this.xPosition--;
+                this.xPosition -= this.speed;
             } else if (input.keys.includes('s')) {
-                this.yPosition++;
+                this.yPosition += this.speed;
             } else if (input.keys.includes('d')) {
-                this.xPosition++;
+                this.xPosition += this.speed;
             } else if (input.keys.includes('w') && input.keys.includes('d')) {
-                this.yPosition--;
-                this.xPosition++;
+                this.yPosition -= this.speed;
+                this.xPosition += this.speed;
                 console.log('!!!');sssss
             } else if (input.keys.includes('d') && input.keys.includes('s')) {
-                this.yPosition++;
-                this.xPosition++;
+                this.yPosition += this.speed;
+                this.xPosition += this.speed;
                 console.log('Mmmm');
             } else if (input.keys.includes('s') && input.keys.includes('a')) {
-                this.yPosition++;
-                this.xPosition--;
+                this.yPosition += this.speed;
+                this.xPosition -= this.speed;
             } else if (input.keys.includes('a') && input.keys.includes('w')) {
-                this.yPosition--;
-                this.xPosition--;
+                this.yPosition -= this.speed;
+                this.xPosition -= this.speed;
             }
         }
+
+        
         
     }
 
@@ -119,21 +136,39 @@ window.addEventListener('load', function(){
         
     }
 
-    class Projectile {
+    class Fireball {
+        constructor(gameWidth, gameHeight){
+            this.fireball = document.getElementById('fireball');
+            this.xPosition = 500;
+            this.yPosition = 350;
+            this.width = 30;
+            this.height = 30;
+            this.speed = 3;
+        }
+        attack(input, context){
+            if (input.fireballTarget.length === 2) {
+                context.drawImage(this.fireball, this.xPosition, this.yPosition, this.width, this.height);
+            }
+        }
+
         
     }
 
+    const input = new InputHandler();
     const background = new Background(canvas.width, canvas.height);
     const mage = new Mage(canvas.width, canvas.height);
+    const fireball = new Fireball(canvas.width, canvas.height);
     const enemy = new Enemy();
-    const input = new InputHandler();
+    
 
     function animate(){
         background.draw(ctx);
         mage.draw(ctx);
         mage.move(input, ctx);
-        enemy.draw(ctx);
-        enemy.update();
+        fireball.attack(input, ctx)
+        
+        //enemy.draw(ctx);
+        //enemy.update();
         
 
 
