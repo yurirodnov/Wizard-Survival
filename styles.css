@@ -1,0 +1,21 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    display: flex;
+    background-color: rgb(21, 21, 21);
+    align-items: center;
+    justify-content: center;
+}
+
+#canvas {
+    display: flex;    
+    border: 3px solid rgb(225, 225, 225);
+}
+
+#grass, #mage, #fireball, #monster {
+    display: none;
+}
