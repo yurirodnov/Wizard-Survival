@@ -42,8 +42,14 @@ window.addEventListener('load', function(){
                     console.log(this.fireballTarget);
                     
                 }
-                
+            });
+            window.addEventListener('mouseup', e => {
+                if (e.target.id === "canvas") {
+                    this.fireballTarget.splice(0, this.fireballTarget.length);
 
+                    console.log(this.fireballTarget);
+                    
+                }
             });
         }
 
@@ -51,8 +57,7 @@ window.addEventListener('load', function(){
 
     class Mage {
         constructor(){            
-            this.mage = document.getElementById('mage');
-            
+            this.mage = document.getElementById('mage');            
             this.xPosition = 500;
             this.yPosition = 350;
             this.width = 70;
@@ -65,31 +70,38 @@ window.addEventListener('load', function(){
         move(input){
             if (input.keys.includes('w')) {                
                 this.yPosition -= this.speed;
+                console.log(this.yPosition);
             } else if (input.keys.includes('a')) {
                 this.xPosition -= this.speed;
+                console.log(this.xPosition);
             } else if (input.keys.includes('s')) {
                 this.yPosition += this.speed;
+                console.log(this.yPosition);
             } else if (input.keys.includes('d')) {
                 this.xPosition += this.speed;
+                console.log(this.xPosition);
             } else if (input.keys.includes('w') && input.keys.includes('d')) {
                 this.yPosition -= this.speed;
                 this.xPosition += this.speed;
-                console.log('!!!');sssss
+                console.log(this.yPosition);
+                console.log(this.xPosition);
             } else if (input.keys.includes('d') && input.keys.includes('s')) {
                 this.yPosition += this.speed;
                 this.xPosition += this.speed;
-                console.log('Mmmm');
+                console.log(this.yPosition);
+                console.log(this.xPosition);
             } else if (input.keys.includes('s') && input.keys.includes('a')) {
                 this.yPosition += this.speed;
                 this.xPosition -= this.speed;
+                console.log(this.yPosition);
+                console.log(this.xPosition);
             } else if (input.keys.includes('a') && input.keys.includes('w')) {
                 this.yPosition -= this.speed;
                 this.xPosition -= this.speed;
+                console.log(this.yPosition);
+                console.log(this.xPosition);
             }
         }
-
-        
-        
     }
 
     class Background {
@@ -117,8 +129,7 @@ window.addEventListener('load', function(){
             this.speed = 1;
         }
         draw(context){
-            context.drawImage(this.image, this.xPosition, this.yPosition, this.width, this.height);
-            
+            context.drawImage(this.image, this.xPosition, this.yPosition, this.width, this.height);            
         }
         update(){
             this.xPosition -= this.speed;
@@ -130,24 +141,23 @@ window.addEventListener('load', function(){
                 this.xPosition -= this.speed;
                 this.yPosition -= this.speed;
             }
-
-            
-        }
-        
+        }        
     }
 
     class Fireball {
-        constructor(gameWidth, gameHeight){
+        constructor(mage){
             this.fireball = document.getElementById('fireball');
-            this.xPosition = 500;
-            this.yPosition = 350;
-            this.width = 30;
-            this.height = 30;
-            this.speed = 3;
+            this.xPosition = mage.xPosition;
+            this.yPosition = mage.yPosition;            
+            this.width = 20;
+            this.height = 20;
+            this.speed = 6;
         }
-        attack(input, context){
+        attack(input, context, mage){
             if (input.fireballTarget.length === 2) {
-                context.drawImage(this.fireball, this.xPosition, this.yPosition, this.width, this.height);
+                context.drawImage(this.fireball, this.xPosition, this.yPosition + 30, this.width, this.height);
+                this.xPosition += this.speed;
+                console.log(`mage position: ${mage.xPosition}`);
             }
         }
 
@@ -157,7 +167,7 @@ window.addEventListener('load', function(){
     const input = new InputHandler();
     const background = new Background(canvas.width, canvas.height);
     const mage = new Mage(canvas.width, canvas.height);
-    const fireball = new Fireball(canvas.width, canvas.height);
+    const fireball = new Fireball(mage);
     const enemy = new Enemy();
     
 
@@ -165,7 +175,7 @@ window.addEventListener('load', function(){
         background.draw(ctx);
         mage.draw(ctx);
         mage.move(input, ctx);
-        fireball.attack(input, ctx)
+        fireball.attack(input, ctx, mage)
         
         //enemy.draw(ctx);
         //enemy.update();
